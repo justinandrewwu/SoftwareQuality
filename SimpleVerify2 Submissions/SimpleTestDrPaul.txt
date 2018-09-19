@@ -1,0 +1,204 @@
+001: import org.junit.Test;
+002: import static org.junit.Assert.assertThat;
+003: import static org.hamcrest.core.Is.is;
+004: import static org.hamcrest.core.IsNull.notNullValue;
+005: /**
+006:  * Tests for Simple class.
+007:  *
+008:  * @author  Dr. Jody Paul
+009:  * @version Fall 2018 1.2.0
+010:  */
+011: public class SimpleTest {
+012:     @Test
+013:     public void textStatus() {
+014:         Simple simple0 = new Simple("Some TEXT", 0, true, new Integer[] {}, 0);
+015:         assertThat(simple0.text(), is("Some TEXT"));
+016:     }
+017: 
+018:     @Test
+019:     public void numericIntStatus() {
+020:         Simple simple0 = new Simple("More TEXT", 42, true, new Integer[] {}, 0);
+021:         assertThat(simple0.number(), is(42));
+022:     }
+023: 
+024:     @Test
+025:     public void numericIntegerStatus() {
+026:         Integer myInteger = Integer.valueOf(9182734);
+027:         Simple simple0 = new Simple("More TEXT",
+028:                                     myInteger,
+029:                                     true,
+030:                                     new Integer[] {}, 0);
+031:         assertThat(simple0.number().intValue(), is(myInteger.intValue()));
+032:     }
+033: 
+034:     @Test
+035:     public void numericDoubleStatus() {
+036:         Simple simple0 = new Simple("More TEXT", 42.000975, true, new Integer[] {}, 0);
+037:         assertThat(simple0.number(), is(42.000975));
+038:     }
+039: 
+040:     @Test
+041:     public void logicStatus() {
+042:         Simple simple0 = new Simple("TEXT", 42, true, new Integer[] {}, 0);
+043:         assertThat(simple0.truth(), is(true));
+044:         Simple simple1 = new Simple("Other TEXT", 42, false, new Integer[] {}, 0);
+045:         assertThat(simple1.truth(), is(false));
+046:     }
+047: 
+048:     @Test
+049:     public void flipTest() {
+050:         Simple simple0 = new Simple("TXT", 42, true, new Integer[] {}, 0);
+051:         assertThat(simple0.truth(), is(true));
+052:         simple0.flip();
+053:         assertThat(simple0.truth(), is(false));
+054:         simple0.flip();
+055:         assertThat(simple0.truth(), is(true));
+056:     }
+057: 
+058:     @Test
+059:     public void arbitrarySequence() {
+060:         Simple simple0 = new Simple();
+061:         assertThat(simple0.nextInSequence(), notNullValue());
+062:     }
+063: 
+064:     @Test
+065:     public void depthZeroSequences() {
+066:         Simple simple0 = new Simple("A", 0, true, new Integer[] {}, 0);
+067:         for (int i = 0; i < 100; i++) {
+068:             assertThat(simple0.nextInSequence(), is(0));
+069:         }
+070:         simple0 = new Simple("A", 1, true, new Integer[] {0, 0, 0}, 0);
+071:         for (int i = 0; i < 100; i++) {
+072:             assertThat(simple0.nextInSequence(), is(0));
+073:         }
+074:         simple0 = new Simple("A", 2, true, new Integer[] {42, -3, 86}, 0);
+075:         assertThat(simple0.nextInSequence(), is(42));
+076:         assertThat(simple0.nextInSequence(), is(-3));
+077:         assertThat(simple0.nextInSequence(), is(86));
+078:         for (int i = 0; i < 100; i++) {
+079:             assertThat(simple0.nextInSequence(), is(0));
+080:         }
+081:     }
+082: 
+083:     @Test
+084:     public void depthOneSequences() {
+085:         Simple simple1 = new Simple("B", 0, true, new Integer[] {42}, 1);
+086:         for (int i = 0; i < 100; i++) {
+087:             assertThat(simple1.nextInSequence(), is(42));
+088:         }
+089:         simple1 = new Simple("B", 1, true, new Integer[] {42, -3, 86}, 1);
+090:         assertThat(simple1.nextInSequence(), is(42));
+091:         assertThat(simple1.nextInSequence(), is(-3));
+092:         for (int i = 0; i < 100; i++) {
+093:             assertThat(simple1.nextInSequence(), is(86));
+094:         }
+095:     }
+096: 
+097:     @Test
+098:     public void depthTwoSequences() {
+099:         Simple simple2 = new Simple("C", 0, true, new Integer[] {1, 1}, 2);
+100:         assertThat(simple2.nextInSequence(), is(1));
+101:         assertThat(simple2.nextInSequence(), is(1));
+102:         for (int i = 1, j = 1, k = 1, t = 0; i < 100; i++) {
+103:             t = j + k;
+104:             j = k;
+105:             k = t;
+106:             assertThat(simple2.nextInSequence(), is(k));
+107:         }
+108:         simple2 = new Simple("C", 1, true, new Integer[] {42, -3, 0}, 2);
+109:         assertThat(simple2.nextInSequence(), is(42));
+110:         assertThat(simple2.nextInSequence(), is(-3));
+111:         assertThat(simple2.nextInSequence(), is(0));
+112:         assertThat(simple2.nextInSequence(), is(-3));
+113:         for (int i = 1, j = 0, k = -3, t = 0; i < 100; i++) {
+114:             t = j + k;
+115:             j = k;
+116:             k = t;
+117:             assertThat(simple2.nextInSequence(), is(k));
+118:         }
+119:     }
+120: 
+121:     @Test
+122:     public void depthThreeSequences() {
+123:         Simple simple3 = new Simple("D", 0, true, new Integer[] {0, 1, 2}, 3);
+124:         assertThat(simple3.nextInSequence(), is(0));
+125:         assertThat(simple3.nextInSequence(), is(1));
+126:         assertThat(simple3.nextInSequence(), is(2));
+127:         for (int i = 1, j = 0, k = 1, m = 2, t = 0; i < 100; i++) {
+128:             t = j + k + m;
+129:             j = k;
+130:             k = m;
+131:             m = t;
+132:             assertThat(simple3.nextInSequence(), is(m));
+133:         }
+134:         simple3 = new Simple("D", 1, true, new Integer[] {42, -3, 0}, 3);
+135:         assertThat(simple3.nextInSequence(), is(42));
+136:         assertThat(simple3.nextInSequence(), is(-3));
+137:         assertThat(simple3.nextInSequence(), is(0));
+138:         assertThat(simple3.nextInSequence(), is(39));
+139:         assertThat(simple3.nextInSequence(), is(36));
+140:         assertThat(simple3.nextInSequence(), is(75));
+141:         assertThat(simple3.nextInSequence(), is(150));
+142:         assertThat(simple3.nextInSequence(), is(261));
+143:     }
+144: 
+145:     @Test
+146:     public void depthFourSequences() {
+147:         Simple simple4 = new Simple("E", 4, true, new Integer[] {-1, 0, 1, 2}, 4);
+148:         assertThat(simple4.nextInSequence(), is(-1));
+149:         assertThat(simple4.nextInSequence(), is(0));
+150:         assertThat(simple4.nextInSequence(), is(1));
+151:         assertThat(simple4.nextInSequence(), is(2));
+152:         for (int i = 1, j = -1, k = 0, m = 1, n = 2, t = 0; i < 100; i++) {
+153:             t = j + k + m + n;
+154:             j = k;
+155:             k = m;
+156:             m = n;
+157:             n = t;
+158:             assertThat(simple4.nextInSequence(), is(n));
+159:         }
+160:         simple4 = new Simple("E", 1, true, new Integer[] {42, -3, 0, 1}, 4);
+161:         assertThat(simple4.nextInSequence(), is(42));
+162:         assertThat(simple4.nextInSequence(), is(-3));
+163:         assertThat(simple4.nextInSequence(), is(0));
+164:         assertThat(simple4.nextInSequence(), is(1));
+165:         assertThat(simple4.nextInSequence(), is(40));
+166:         assertThat(simple4.nextInSequence(), is(38));
+167:         assertThat(simple4.nextInSequence(), is(79));
+168:         assertThat(simple4.nextInSequence(), is(158));
+169:         assertThat(simple4.nextInSequence(), is(315));
+170:     }
+171: 
+172:     @Test
+173:     public void wrapAroundSequences() {
+174:         Simple simpleNeg = new Simple("F", 0, true, new Integer[] {Integer.MIN_VALUE, -1}, 2);
+175:         assertThat(simpleNeg.nextInSequence(), is(Integer.MIN_VALUE));
+176:         assertThat(simpleNeg.nextInSequence(), is(-1));
+177:         for (int i = 1, j = Integer.MIN_VALUE, k = -1, t = 0; i < 1000000; i++) {
+178:             t = j + k;
+179:             j = k;
+180:             k = t;
+181:             assertThat(simpleNeg.nextInSequence(), is(k));
+182:         }
+183:         Simple simplePos = new Simple("F", 0, true, new Integer[] {Integer.MAX_VALUE, 2}, 2);
+184:         assertThat(simplePos.nextInSequence(), is(Integer.MAX_VALUE));
+185:         assertThat(simplePos.nextInSequence(), is(2));
+186:         for (int i = 1, j = Integer.MAX_VALUE, k = 2, t = 0; i < 1000000; i++) {
+187:             t = j + k;
+188:             j = k;
+189:             k = t;
+190:             assertThat(simplePos.nextInSequence(), is(k));
+191:         }
+192:     }
+193: 
+194:     @Test
+195:     public void toStringTest() {
+196:         Simple simpleStr = new Simple("Expected Text",
+197:                                       42,
+198:                                       true,
+199:                                       new Integer[] {Integer.MIN_VALUE, -1},
+200:                                       2);
+201:         assertThat(simpleStr.toString(), is("Simple[true, 42, \"Expected Text\"]"));
+202:     }
+203: }
+204:

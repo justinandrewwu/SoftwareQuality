@@ -1,0 +1,11 @@
+Nicole:
+
+My test code needed:
+  Descriptive pass/fail messages
+  Better protection against crashing from bad source code
+  to allow NULL as a valid data type
+
+I wish my code:
+  Used JUnit
+  Iterated through each Simple.java within a specified folder
+  Was packaged in a way that was not IDE-dependent
